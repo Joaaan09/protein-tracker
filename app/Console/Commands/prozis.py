@@ -47,14 +47,14 @@ def get_prozis_price():
         return {
             "store": "Prozis",
             "current_price": current_price,  # Cambiado de "price" a "current_price"
-            "discount": 25,
-	    "codigo": "Prueba",
+            "discount": 10,
+	        "codigo": "juan",
             "price_history": [  # Nuevo campo para el histórico
                 {
                     "price": current_price,
-                    "discount": 25,
+                    "discount": 10,
                     "timestamp": timestamp,
-		    "codigo": "Prueba"
+		    "codigo": "juan"
                 }
             ]
         }

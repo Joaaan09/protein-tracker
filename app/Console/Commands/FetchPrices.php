@@ -66,6 +66,7 @@ class FetchPrices extends Command
                 $priceRecord->price = $result['current_price'];
                 $priceRecord->discount = $result['discount'];
                 $priceRecord->price_history = $existingHistory;
+                $priceRecord->codigo = $result['codigo'];
                 $priceRecord->save();
                 
                 $this->info("✅ {$result['store']} updated!");
