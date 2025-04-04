@@ -86,12 +86,12 @@ def get_myprotein_price():
             "store": "MyProtein",
             "current_price": current_price,
             "discount": discount,
-	    "codigo": "Andoni",
+	    "codigo": "andoni",
             "price_history": [{
                 "price": current_price,
                 "discount": discount,
                 "timestamp": timestamp,
-		"codigo": "Andoni"
+		"codigo": "andoni"
             }]
         }
     except Exception as e:

@@ -22,7 +22,7 @@ def run_scrapper(script_name):
         return {"error": str(e)}
 
 if __name__ == "__main__":
-    scrapers = ["myprotein.py", "prozis.py"]
+    scrapers = ["myprotein.py", "prozis.py", "amazon.py"]
     data = {}
 
     for scrapper in scrapers:
