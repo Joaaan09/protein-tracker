@@ -9,17 +9,18 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-// database/migrations/xxxx_xx_xx_create_prices_table.php
-public function up()
-{
-    Schema::create('prices', function (Blueprint $table) {
-        $table->id();
-        $table->string('store'); // MyProtein, Prozis, Amazon
-        $table->decimal('price', 8, 2); // Preu actual
-        $table->decimal('discount', 5, 2); // Descompte
-        $table->timestamps(); // created_at i updated_at
-    });
-}
+    public function up()
+    {
+        Schema::create('prices', function (Blueprint $table) {
+            $table->id();
+            $table->string('store'); // MyProtein, Prozis, Amazon
+            $table->decimal('price', 8, 2); // Preu actual
+            $table->decimal('discount', 5, 2); // Descompte
+            $table->string('codigo')->nullable(); // Nou camp: codi identificador
+            $table->json('price_history')->nullable(); // Nou camp: historial de preus
+            $table->timestamps(); // created_at i updated_at
+        });
+    }
 
     /**
      * Reverse the migrations.
@@ -29,3 +30,4 @@ public function up()
         Schema::dropIfExists('prices');
     }
 };
+
