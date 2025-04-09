@@ -61,11 +61,11 @@ def get_amazon_price():
             "store": "Amazon",
             "current_price": price,
             "discount": 0,
-            "codigo": "Sin código",
+            "codigo": "Sense codi",
             "price_history": [{
                 "price": price,
                 "timestamp": timestamp,
-                "codigo": "Sin código",
+                "codigo": "Sense codi",
                 "discount": 0
             }]
         }

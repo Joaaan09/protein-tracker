@@ -15,30 +15,30 @@ class FetchPrices extends Command
     {
         $command = escapeshellcmd('python3 ' . base_path('app/Console/Commands/run_scrappers.py'));
         $output = shell_exec($command);
-        
+
         $this->line("Raw Python output:");
         $this->line($output);
-        
+
         $data = json_decode($output, true);
-        
+
         if (json_last_error() !== JSON_ERROR_NONE) {
             $this->error("Error decoding JSON: " . json_last_error_msg());
             return 1;
         }
-        
+
         foreach ($data as $scraperName => $result) {
             $this->newLine();
             $this->info("Processing {$scraperName}...");
-            
+
             if (isset($result['error'])) {
                 $this->error("Error in {$scraperName}: {$result['error']}");
                 continue;
             }
-            
+
             try {
                 // Obtener o crear el registro
                 $priceRecord = Price::firstOrNew(['store' => $result['store']]);
-                
+
                 // Convertir price_history a array si es string
                 $existingHistory = [];
                 if (!empty($priceRecord->price_history)) {
@@ -46,38 +46,51 @@ class FetchPrices extends Command
                         ? json_decode($priceRecord->price_history, true)
                         : $priceRecord->price_history;
                 }
-                
+
+                // Verificar si ya existe una entrada del mismo día
+                $today = Carbon::now()->toDateString();
+                $alreadyExistsToday = collect($existingHistory)->contains(function ($entry) use ($today) {
+                    return isset($entry['timestamp']) &&
+                        Carbon::parse($entry['timestamp'])->toDateString() === $today;
+                });
+
+                if ($alreadyExistsToday) {
+                    $this->warn("⏩ {$result['store']} ya tiene una entrada hoy, se omite.");
+                    continue;
+                }
+
                 // Añadir nueva entrada al histórico
                 $newHistoryEntry = [
                     'price' => $result['current_price'],
                     'discount' => $result['discount'],
                     'timestamp' => Carbon::now()->toISOString()
                 ];
-                
+
                 $existingHistory[] = $newHistoryEntry;
-                
+
                 // Limitar histórico (últimos 30 registros)
                 $maxHistoryEntries = 30;
                 if (count($existingHistory) > $maxHistoryEntries) {
                     $existingHistory = array_slice($existingHistory, -$maxHistoryEntries);
                 }
-                
+
                 // Actualizar registro
                 $priceRecord->price = $result['current_price'];
                 $priceRecord->discount = $result['discount'];
                 $priceRecord->price_history = $existingHistory;
                 $priceRecord->codigo = $result['codigo'];
                 $priceRecord->save();
-                
+
                 $this->info("✅ {$result['store']} updated!");
-                
+
             } catch (\Exception $e) {
                 $this->error("Error saving {$result['store']}: " . $e->getMessage());
             }
         }
-        
+
         $this->newLine();
         $this->info("🏁 Price update completed!");
         return 0;
     }
 }
+
