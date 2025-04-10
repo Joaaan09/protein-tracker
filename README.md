@@ -1,66 +1,118 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Comparador de Precios de Proteínas  
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistema Laravel + Python que monitorea precios de suplementos proteicos en MyProtein y otras tiendas, con historial de precios y alertas.
+En el caso de MyProtein, se accede al enlace de la proteína sin sabor de 1 kg, se añade al carrito, se aplica el código de descuento y finalmente se obtiene el precio original (sin descuento), el porcentaje de descuento y se calcula el precio final.
 
-## About Laravel
+En Prozis, se accede a la proteína sin sabor de 1 kg y se obtiene el precio. El descuento se ha calculado manualmente: he ingresado el código de descuento de manera manual y comprobado el porcentaje de descuento, ya que, si intentara hacer el proceso igual que en MyProtein, se requiere iniciar sesión, lo que el scrapper no puede hacer tal como está diseñado.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+En el caso de Amazon, realicé una búsqueda de "proteína whey 1 kg sin sabor" y ordené los resultados de menor a mayor precio. El scrapper se encarga de obtener el primer producto, que es el más barato, y extrae su precio. En este caso, no hay descuento aplicado.
+## Características principales  
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- ✅ Scraping automatizado con Selenium (Python)  
+- ✅ Base de datos SQLite integrada  
+- ✅ Historial completo de precios  
+- ✅ Fácil expansión a nuevas tiendas  
+- ✅ Comando CLI integrado (`php artisan prices:fetch`)  
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Requisitos  
 
-## Learning Laravel
+- **PHP >= 8.1**  
+- **Composer**  
+- **Laravel 10+**  
+- **SQLite** (no requiere servidor de base de datos)  
+- **Python 3.10+** con pip  
+- **Google Chrome** (última versión estable)  
+- **ChromeDriver** (se instala automáticamente)  
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Instalación rápida  
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+1. Clona el repositorio:  
+```bash  
+git clone https://github.com/Joaaan09/protein-tracker  
+cd protein-price-tracker  
+```  
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+2. Instala dependencias PHP:  
+```bash  
+composer install  
+```  
 
-## Laravel Sponsors
+3. Configura el entorno:  
+```bash  
+cp .env.example .env  
+```  
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+4. Configura SQLite en el `.env`:  
+```bash  
+echo "DB_CONNECTION=sqlite" >> .env  
+echo "DB_DATABASE=${PWD}/database/database.sqlite" >> .env  
+```  
 
-### Premium Partners
+5. Crea la base de datos:  
+```bash  
+touch database/database.sqlite  
+```  
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+6. Genera la clave de Laravel:  
+```bash  
+php artisan key:generate  
+```  
 
-## Contributing
+7. Ejecuta las migraciones:  
+```bash  
+php artisan migrate  
+```  
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+8. Instala dependencias Python:  
+```bash  
+pip install selenium webdriver-manager  
+```  
 
-## Code of Conduct
+## Uso básico  
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Actualizar precios:  
+```bash  
+php artisan prices:fetch  
+```  
 
-## Security Vulnerabilities
+Iniciar servidor web local:  
+```bash  
+php artisan serve  
+```  
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Para desarrolladores  
 
-## License
+### Estructura de scrapers Python  
+Los scrapers se encuentran en `/app/Console/Commands`:  
+- `myprotein_scraper.py` - Scraper principal para MyProtein  
+- `utils.py` - Funciones compartidas  
+- `requirements.txt` - Dependencias Python  
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Testear scrapers individualmente  
+```bash  
+python3 scrapers/myprotein.py --test  
+```  
+
+### Variables de entorno importantes  
+```dotenv  
+SCRAPER_HEADLESS=true  # Ejecución sin interfaz gráfica  
+SCRAPER_TIMEOUT=30     # Timeout en segundos  
+```  
+
+### Cómo añadir una nueva tienda  
+1. Crea un nuevo archivo `nuevatienda_scraper.py` en `/app/Console/Commands`  
+2. Implementa la función `get_prices()`  
+3. Registra el scraper en `app/Console/Commands/run_scrappers.php`  
+
+## Solución de problemas  
+
+**Error:** ChromeDriver no se inicia  
+- Verifica que tienes Google Chrome instalado  
+- Ejecuta `google-chrome --version` y asegúrate que coincide con la versión de ChromeDriver  
+
+**Error:** Módulos Python no encontrados  
+- Reinstala dependencias: `pip install -r scrapers/requirements.txt`  
+
+## Licencia  
+
+MIT License - Libre uso y modificación
