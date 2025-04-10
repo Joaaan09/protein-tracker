@@ -18,6 +18,7 @@ return new class extends Migration
             $table->decimal('discount', 5, 2); // Descompte
             $table->string('codigo')->nullable(); // Nou camp: codi identificador
             $table->json('price_history')->nullable(); // Nou camp: historial de preus
+	    $table->string('url')->nullable(); //Url del producte
             $table->timestamps(); // created_at i updated_at
         });
     }

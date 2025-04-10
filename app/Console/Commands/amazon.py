@@ -17,35 +17,34 @@ def get_amazon_price():
     # Opciones de Chrome
     chrome_options = Options()
     chrome_options.add_argument(f"--user-data-dir={user_data_dir}")
-    chrome_options.add_argument("--headless")  # Quitar si quieres ver lo que hace
+    chrome_options.add_argument("--headless")
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--window-size=1920,1080")
-    chrome_options.add_argument("--lang=es-ES")  # Idioma español
+    chrome_options.add_argument("--lang=es-ES")
 
-    # Inicializar el driver
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=chrome_options)
 
     try:
-        url = "https://www.amazon.es/s?k=proteina+whey+1kg+sin+sabor&s=price-asc-rank&ds=v1%3ArnTSm%2FJl3JTrK6cGp48IzLHogBrKg0meaW2VufxPhj0&__mk_es_ES=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=1J0M7L335C4VP&qid=1743701106&sprefix=proteina+whey+1kg+sin+sabor%2Caps%2C96&ref=sr_st_price-asc-rank"
-        driver.get(url)
+        urlSearch = "https://www.amazon.es/s?k=proteina+whey+1kg+sin+sabor&s=price-asc-rank&ds=v1%3ArnTSm%2FJl3JTrK6cGp48IzLHogBrKg0meaW2VufxPhj0"
+        driver.get(urlSearch)
 
-        # Aceptar cookies si es necesario
+        # Aceptar cookies si aparece
         try:
             cookie_btn = WebDriverWait(driver, 5).until(
                 EC.element_to_be_clickable((By.ID, "sp-cc-accept"))
             )
             cookie_btn.click()
         except:
-            pass  # Si no aparece el banner, seguimos
+            pass
 
         # Esperar a que se cargue el primer producto
         first_product = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "div.s-main-slot div[data-component-type='s-search-result']"))
         )
 
-        # Extraer precio (puede estar dividido en euros y céntimos)
+        # Precio
         try:
             whole_price = first_product.find_element(By.CSS_SELECTOR, "span.a-price-whole").text.replace(".", "").strip()
             fraction_price = first_product.find_element(By.CSS_SELECTOR, "span.a-price-fraction").text.strip()
@@ -54,14 +53,23 @@ def get_amazon_price():
         except Exception as e:
             raise Exception("No se pudo extraer el precio del primer producto")
 
+        # URL del producto
+        try:
+            link_element = first_product.find_element(By.CSS_SELECTOR, "a.a-link-normal")
+            url = link_element.get_attribute("href")
+        except Exception as e:
+            url = None  # Si no se puede extraer la URL, dejamos que sea None
+
         # Timestamp actual
         timestamp = datetime.now().isoformat()
 
-        return {
+        # Devolver el JSON con los datos obtenidos
+        result = {
             "store": "Amazon",
             "current_price": price,
             "discount": 0,
             "codigo": "Sense codi",
+            "url": url if url else "No URL available",  # Añadir mensaje si no tiene URL
             "price_history": [{
                 "price": price,
                 "timestamp": timestamp,
@@ -70,15 +78,19 @@ def get_amazon_price():
             }]
         }
 
+        # Imprimir el resultado para asegurarnos de que se muestra algo
+        print(json.dumps(result, ensure_ascii=False))
+
+        return result
+
     except Exception as e:
-        print(f"Error en Amazon: {e}", file=sys.stderr)
-        return {"error": str(e)}
+        # Capturar el error y devolverlo en formato JSON
+        error_result = {"error": f"Error en Amazon: {str(e)}"}
+        print(json.dumps(error_result, ensure_ascii=False))
+        return error_result
+
     finally:
         driver.quit()
 
 if __name__ == "__main__":
-    try:
-        data = get_amazon_price()
-        print(json.dumps(data, ensure_ascii=False))
-    except Exception as e:
-        print(json.dumps({"error": str(e)}))
+    get_amazon_price()

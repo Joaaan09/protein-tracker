@@ -48,7 +48,8 @@ def get_prozis_price():
             "store": "Prozis",
             "current_price": current_price,  # Cambiado de "price" a "current_price"
             "discount": 10,
-	        "codigo": "juan",
+	    "codigo": "juan",
+	    "url": "https://www.prozis.com/es/es/prozis/100-real-whey-protein-1000-g",
             "price_history": [  # Nuevo campo para el histórico
                 {
                     "price": current_price,

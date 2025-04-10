@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comparador de Preus de Proteïna</title>
+    <title>Comparador de Preus de Whey Proteïna 1kg</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-gray-100">
     <div class="container mx-auto p-4">
-        <h1 class="text-3xl font-bold mb-6">Comparador de Preus de Proteïna</h1>
+        <h1 class="text-3xl font-bold mb-6">Comparador de Preus de Whey Proteïna 1kg</h1>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             @foreach($prices as $price)
@@ -29,9 +29,19 @@
                                 </span>
                             </p>
                             <p class="text-gray-700">
-    			    	Codi aplicat: <span class="font-bold">{{$price->codigo }}</span>
-			    </p>
+                                Codi aplicat: <span class="font-bold">{{$price->codigo }}</span>
+                            </p>
 
+                            <!-- Mostrar URL si está disponible -->
+                            <p class="text-gray-700">
+                                URL del producte: <span class="font-bold">
+                                    @if($price->url)
+                                        <a href="{{ $price->url }}" target="_blank" class="text-blue-500">Veure producte</a>
+                                    @else
+                                        No disponible
+                                    @endif
+                                </span>
+                            </p>
                         </div>
                         <span class="text-sm text-gray-500">{{ $price->updated_at->diffForHumans() }}</span>
                     </div>
@@ -43,7 +53,6 @@
                                 <canvas id="chart-{{ $price->id }}"></canvas>
                             </div>
                         </div>
-
                         <script>
                             document.addEventListener('DOMContentLoaded', function() {
                                 const history = @json($price->price_history);
@@ -93,4 +102,3 @@
     </div>
 </body>
 </html>
-

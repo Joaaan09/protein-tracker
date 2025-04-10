@@ -87,6 +87,7 @@ def get_myprotein_price():
             "current_price": current_price,
             "discount": discount,
 	    "codigo": "andoni",
+            "url":"https://www.myprotein.es/p/nutricion-deportiva/impact-whey-protein/10530943/?variation=10531012",
             "price_history": [{
                 "price": current_price,
                 "discount": discount,
