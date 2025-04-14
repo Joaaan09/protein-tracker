@@ -84,13 +84,14 @@ php artisan serve
 
 ### Estructura de scrapers Python  
 Los scrapers se encuentran en `/app/Console/Commands`:  
-- `myprotein_scraper.py` - Scraper principal para MyProtein  
-- `utils.py` - Funciones compartidas  
-- `requirements.txt` - Dependencias Python  
+- `myprotein.py` - Scraper principal para MyProtein  
+- `prozis.py` - Scraper principal para Prozis
+- `amazon.py` - Scraper principal para Amazon
+- `run_scrappers.py` - Programa que ejecuta los scrappers 
 
 ### Testear scrapers individualmente  
 ```bash  
-python3 scrapers/myprotein.py --test  
+python3 scrapers/myprotein.py
 ```  
 
 ### Variables de entorno importantes  
@@ -110,8 +111,6 @@ SCRAPER_TIMEOUT=30     # Timeout en segundos
 - Verifica que tienes Google Chrome instalado  
 - Ejecuta `google-chrome --version` y asegúrate que coincide con la versión de ChromeDriver  
 
-**Error:** Módulos Python no encontrados  
-- Reinstala dependencias: `pip install -r scrapers/requirements.txt`  
 
 ## Licencia  
 
